@@ -13,11 +13,11 @@ using namespace std;
 
 class DSCFwdModel : public FwdModel {
 public:
-   static FwdModel* NewInstance();
-   
+  static FwdModel* NewInstance();
+
   // Virtual function overrides
-   virtual void Initialize(ArgsType& args);
-   virtual void Evaluate(const ColumnVector& params, 
+  virtual void Initialize(ArgsType& args);
+  virtual void Evaluate(const ColumnVector& params, 
 			      ColumnVector& result) const;
   virtual vector<string> GetUsage() const;
   virtual string ModelVersion() const;
@@ -27,13 +27,11 @@ public:
                                 
   virtual void NameParams(vector<string>& names) const;     
   virtual int NumParams() const 
-  { return 1 + ncomps + (infermtt?ncomps:0) + (inferlambda?ncomps:0) + (inferdelay?ncomps:0) + (inferart?2:0) + (inferret?1:0)+ (usecbv?1:0) + (dispoption?2:0); } 
+  { return 2 + (infermtt?1:0) + (inferlambda?1:0) + (inferdelay?1:0) + (inferart?2:0) + (inferret?1:0)+ (usecbv?1:0) + (dispoption?2:0); } 
 
   virtual ~DSCFwdModel() { return; }
 
   virtual void HardcodedInitialDists(MVNDist& prior, MVNDist& posterior) const;
-  //virtual void InitParams(MVNDist& posterior) const;
-
 
 protected: 
 
@@ -45,13 +43,13 @@ protected:
   // Lookup the starting indices of the parameters
   int cbf_index() const {return 1;} 
 
-  int gmu_index() const {  return cbf_index() + (infermtt?ncomps:0);  }
+  int gmu_index() const {  return 1 + (infermtt?1:0);  }
 
-  int lambda_index() const { return gmu_index() + (inferlambda?ncomps:0); }
+  int lambda_index() const { return 1 + (infermtt?1:0) + (inferlambda?1:0); }
 
-  int delta_index() const { return lambda_index() + (inferdelay?ncomps:0); }
+  int delta_index() const { return 1 + (infermtt?1:0) + (inferlambda?1:0) + (inferdelay?1:0); }
  
-  int sig0_index() const { return delta_index() + ncomps; }
+  int sig0_index() const { return 2 + (infermtt?1:0) + (inferlambda?1:0) + (inferdelay?1:0); }
 
   int art_index() const { return sig0_index() + (inferart?1:0);}
 
@@ -73,9 +71,6 @@ protected:
 
   bool aifconc;
 
-  //inference parameters
-  int ncomps; //number of tissue components
-  bool pvcorr;
   bool infermtt;
   bool usecbv;
   bool inferlambda;
@@ -89,10 +84,9 @@ protected:
   bool imageprior;
 
   string convmtx;
-
+  
   private:
   /** Auto-register with forward model factory. */
   static FactoryRegistration<FwdModelFactory, DSCFwdModel> registration;
-
 
 };
