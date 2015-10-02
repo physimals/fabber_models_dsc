@@ -6,17 +6,20 @@
 
 /*  CCOPYRIGHT */
 
-#include "fwdmodel.h"
-#include "inference.h"
+#include "fabbercore/fwdmodel.h"
+#include "fabbercore/inference.h"
 #include <string>
 using namespace std;
 
 class DSCFwdModel : public FwdModel {
-public: 
+public:
+   static FwdModel* NewInstance();
+   
   // Virtual function overrides
-  virtual void Evaluate(const ColumnVector& params, 
+   virtual void Initialize(ArgsType& args);
+   virtual void Evaluate(const ColumnVector& params, 
 			      ColumnVector& result) const;
-  static void ModelUsage();
+  virtual vector<string> GetUsage() const;
   virtual string ModelVersion() const;
                   
   virtual void DumpParameters(const ColumnVector& vec,
@@ -29,9 +32,8 @@ public:
   virtual ~DSCFwdModel() { return; }
 
   virtual void HardcodedInitialDists(MVNDist& prior, MVNDist& posterior) const;
+  //virtual void InitParams(MVNDist& posterior) const;
 
-  // Constructor
-  DSCFwdModel(ArgsType& args);
 
 protected: 
 
@@ -87,5 +89,10 @@ protected:
   bool imageprior;
 
   string convmtx;
+
+  private:
+  /** Auto-register with forward model factory. */
+  static FactoryRegistration<FwdModelFactory, DSCFwdModel> registration;
+
 
 };

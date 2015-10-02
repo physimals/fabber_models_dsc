@@ -13,8 +13,11 @@
 #include <stdexcept>
 #include "newimage/newimageall.h"
 using namespace NEWIMAGE;
-#include "easylog.h"
+#include "fabbercore/easylog.h"
 #include "miscmaths/miscprob.h"
+
+FactoryRegistration<FwdModelFactory, DSCFwdModel> 
+  DSCFwdModel::registration("dsc");
 
 string DSCFwdModel::ModelVersion() const
 {
@@ -563,9 +566,14 @@ void DSCFwdModel::Evaluate(const ColumnVector& params, ColumnVector& result) con
    //cout << result.t()<< endl;
 }
 
-DSCFwdModel::DSCFwdModel(ArgsType& args)
+FwdModel* DSCFwdModel::NewInstance()
 {
-  Tracer_Plus tr("DSCFwdModel::DSCFwdModel");
+  return new DSCFwdModel();
+}
+
+void DSCFwdModel::Initialize(ArgsType& args)
+{
+  Tracer_Plus tr("DSCFwdModel::Initialize");
     string scanParams = args.ReadWithDefault("scan-params","cmdline");
     
     if (scanParams == "cmdline")
@@ -625,9 +633,13 @@ DSCFwdModel::DSCFwdModel(ArgsType& args)
  
 }
 
-void DSCFwdModel::ModelUsage()
-{ 
-  cout << "Model usagae for DSC model...";
+vector<string> DSCFwdModel::GetUsage() const
+{
+  vector<string> usage;
+  usage.push_back( "\nUsage info for --model=dsc:\n");
+  usage.push_back( "Undefined\n");
+
+  return usage;
 }
 
 void DSCFwdModel::DumpParameters(const ColumnVector& vec,
