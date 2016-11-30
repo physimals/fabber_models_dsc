@@ -6,10 +6,13 @@
 
 /*  CCOPYRIGHT */
 
-#include "fabbercore/fwdmodel.h"
-#include "fabbercore/inference.h"
+#include "fabber_core/fwdmodel.h"
+#include "fabber_core/inference.h"
+#include "utils/tracer_plus.h"
+
 #include <string>
 using namespace std;
+using Utilities::Tracer_Plus;
 
 class DSCFwdModel : public FwdModel {
 public:
@@ -17,12 +20,12 @@ public:
 
   // Virtual function overrides
   virtual void Initialize(ArgsType& args);
-  virtual void Evaluate(const ColumnVector& params, 
-			      ColumnVector& result) const;
+  virtual void Evaluate(const NEWMAT::ColumnVector& params, 
+			      NEWMAT::ColumnVector& result) const;
   virtual vector<string> GetUsage() const;
   virtual string ModelVersion() const;
                   
-  virtual void DumpParameters(const ColumnVector& vec,
+  virtual void DumpParameters(const NEWMAT::ColumnVector& vec,
                                 const string& indents = "") const;
                                 
   virtual void NameParams(vector<string>& names) const;     
@@ -35,8 +38,8 @@ public:
 
 protected: 
 
-  ColumnVector aifshift( const ColumnVector& aif, const float delta, const float hdelt ) const;
-  void createconvmtx( LowerTriangularMatrix& A, const ColumnVector aifnew ) const;
+  NEWMAT::ColumnVector aifshift( const NEWMAT::ColumnVector& aif, const float delta, const float hdelt ) const;
+  void createconvmtx( NEWMAT::LowerTriangularMatrix& A, const NEWMAT::ColumnVector aifnew ) const;
   
 // Constants
 
@@ -66,8 +69,8 @@ protected:
   double te;
   double r2;
   double delt;
-  ColumnVector artsig;
-  ColumnVector s;
+  NEWMAT::ColumnVector artsig;
+  NEWMAT::ColumnVector s;
 
   bool aifconc;
 
