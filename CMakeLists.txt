@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 2.7)
 
 set(DSC_SRC fwdmodel_dsc.cc) 
 
-add_library(fabber_models_dsc SHARED ${DSC_SRC})
+add_library(fabber_models_dsc SHARED ${DSC_SRC} dsc_models.cc)
 add_executable(fabber_dsc ${DSC_SRC} fabber_client.cc)
 
 if(APPLE)
   # Force use of libstdc++ on Mac as FSL uses this and we cannot link otherwise
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libstdc++")
+  # Get rid of CMake warning
+  set(CMAKE_MACOSX_RPATH ON)
 endif(APPLE)
 
 find_path(FABBER_INCLUDE_DIR fabber_core/fwdmodel.h
