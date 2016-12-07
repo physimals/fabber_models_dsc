@@ -21,6 +21,40 @@ using namespace NEWMAT;
 FactoryRegistration<FwdModelFactory, DSCFwdModel> 
   DSCFwdModel::registration("dsc");
 
+static OptionSpec OPTIONS[] =
+{
+	{ "te", OPT_FLOAT, "", OPT_REQ, "" },
+	{ "delt", OPT_FLOAT, "", OPT_REQ, "" },
+	{ "expools", OPT_MATRIX, "ASCII matrix containing extra pool specification", OPT_NONREQ, "" },
+	{ "ptrain", OPT_MATRIX, "ASCII matrix containing pulsed saturation specification", OPT_NONREQ, "" },
+	{ "infermtt", OPT_BOOL, "", OPT_NONREQ, "" },
+	{ "usecbv", OPT_BOOL, "", OPT_NONREQ, "" },
+	{ "inferlambda", OPT_BOOL, "", OPT_NONREQ, "" },
+	{ "inferdelay", OPT_BOOL, "", OPT_NONREQ, "" },
+	{ "inferart", OPT_BOOL, "Infer arterial component", OPT_NONREQ, "" },
+	{ "artoption", OPT_BOOL, "Determines if we add concentrations (false) or signals ", OPT_NONREQ, "" },
+	{ "disp", OPT_BOOL, "Determines if we include some dispersion", OPT_NONREQ, "" },
+	{ "inferret", OPT_BOOL, "", OPT_NONREQ, "" },
+	{ "convmtx", OPT_STR, "Type of convolution matrix: simple or voltera", OPT_NONREQ, "simple" },
+	{ "aif", OPT_MATRIX, "ASCII matrix containing the arterial signal", OPT_NONREQ, "none" },
+	{ "aifconc", OPT_BOOL, "Indicates that the AIF is a CTC not signal curve", OPT_NONREQ, "" },
+	{ "imageprior", OPT_BOOL, "Temp way to indicate we have some image priors (very fixed meaning!)    ", OPT_NONREQ, "" },
+	{ "" }, 
+};
+
+void DSCFwdModel::GetOptions(vector<OptionSpec> &opts) const
+{
+	for (int i = 0; OPTIONS[i].name != ""; i++)
+	{
+		opts.push_back(OPTIONS[i]);
+	}
+}
+
+std::string DSCFwdModel::GetDescription() const
+{
+	return "Model for Dynamic Susceptibility Contrast perfusion MRI ";
+}
+
 string DSCFwdModel::ModelVersion() const
 {
   return "$Id: fwdmodel_dsc.cc,v 1.11 2014/09/29 15:20:47 chappell Exp $";
