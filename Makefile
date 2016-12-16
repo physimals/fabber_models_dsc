@@ -20,7 +20,7 @@ OPTFLAGS = -ggdb
 # Build
 #
 
-all:	${XFILES} libfabbermodels_dsc.a
+all:	${XFILES} libfabber_models_dsc.a
 
 # models in a library
 libfabber_models_dsc.a : ${OBJS}
