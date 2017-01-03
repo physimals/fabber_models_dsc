@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.7)
 
-set(DSC_SRC fwdmodel_dsc.cc) 
+set(MODELS_NAME dsc)
+set(MODELS_SRC fwdmodel_dsc.cc) 
 
-add_library(fabber_models_dsc SHARED ${DSC_SRC} dsc_models.cc)
-add_executable(fabber_dsc ${DSC_SRC} fabber_client.cc)
+add_library(fabber_models_${MODELS_NAME} SHARED ${MODELS_SRC} ${MODELS_NAME}_models.cc)
+add_executable(fabber_${MODELS_NAME} ${MODELS_SRC} fabber_client.cc)
 
 if(APPLE)
   # Force use of libstdc++ on Mac as FSL uses this and we cannot link otherwise
@@ -13,7 +14,7 @@ if(APPLE)
 endif(APPLE)
 
 find_path(FABBER_INCLUDE_DIR fabber_core/fwdmodel.h
-            HINTS .. $ENV{FSLDIR}/include REQUIRED)
+            HINTS $ENV{FSLDIR}/include .. REQUIRED)
 find_path(NEWMAT_INCLUDE_DIR newmat.h
             HINTS $ENV{FSLDIR}/extras/include/newmat REQUIRED)
 find_path(FSL_INCLUDE_DIR newimage/newimage.h
@@ -29,14 +30,12 @@ Message("-- FSL headers in ${FSL_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_EXT_IN
 Message("-- Fabber headers in ${FABBER_INCLUDE_DIR}/fabber_core")
 
 find_library(FABBER_LIBRARY NAMES fabbercore libfabbercore
-             HINTS ../fabber_core/Release ../fabber_core/Debug $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDIR}/lib ../fabber_core/Release ../fabber_core/Debug REQUIRED )
 find_library(FABBER_EXEC_LIBRARY NAMES fabberexec libfabberexec
-             HINTS ../fabber_core/Release ../fabber_core/Debug $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDIR}/lib ../fabber_core/Release ../fabber_core/Debug REQUIRED )
 find_library(NEWMAT_LIBRARY NAMES newmat libnewmat
              HINTS $ENV{FSLDIR}/extras/lib REQUIRED )
 find_library(MISCMATHS_LIBRARY NAMES miscmaths libmiscmaths
-             HINTS $ENV{FSLDIR}/lib REQUIRED )
-find_library(UTILS_LIBRARY NAMES utils libutils
              HINTS $ENV{FSLDIR}/lib REQUIRED )
 find_library(NEWIMAGE_LIBRARY NAMES newimage libnewimage
              HINTS $ENV{FSLDIR}/lib REQUIRED )
@@ -69,8 +68,8 @@ Message("-- Using newimage: ${NEWIMAGE_LIBRARY}")
 Message("-- Using prob: ${PROB_LIBRARY}")
 Message("-- Using zlib: ${Z_LIBRARY}")
 
-target_link_libraries(fabber_models_dsc ${LIBS})
-target_link_libraries(fabber_dsc ${LIBS})
+target_link_libraries(fabber_models_${MODELS_NAME} ${LIBS})
+target_link_libraries(fabber_${MODELS_NAME} ${LIBS})
 
 include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR}/libprob ${BOOST_INCLUDE_DIR})
 
@@ -98,4 +97,8 @@ endif(NOT GIT_DATE)
 
 add_definitions(-DGIT_SHA1="${GIT_SHA1}" -DGIT_DATE="${GIT_DATE}")
 
-
+INSTALL(TARGETS fabber_${MODELS_NAME} fabber_models_${MODELS_NAME}
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+        
