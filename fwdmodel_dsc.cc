@@ -63,7 +63,6 @@ string DSCFwdModel::ModelVersion() const
 void DSCFwdModel::HardcodedInitialDists(MVNDist& prior, 
     MVNDist& posterior) const
 {
-    Tracer_Plus tr("DSCFwdModel::HardcodedInitialDists");
     assert(prior.means.Nrows() == NumParams());
 
      SymmetricMatrix precisions = IdentityMatrix(NumParams()) * 1e-12;
@@ -163,8 +162,6 @@ void DSCFwdModel::HardcodedInitialDists(MVNDist& prior,
 
 void DSCFwdModel::Evaluate(const ColumnVector& params, ColumnVector& result) const
 {
-  Tracer_Plus tr("DSCFwdModel::Evaluate");
-
     // ensure that values are reasonable
     // negative check
    ColumnVector paramcpy = params;
@@ -502,7 +499,6 @@ FwdModel* DSCFwdModel::NewInstance()
 
 void DSCFwdModel::Initialize(ArgsType& args)
 {
-  Tracer_Plus tr("DSCFwdModel::DSCFwdModel");
     string scanParams = args.ReadWithDefault("scan-params","cmdline");
     
     if (scanParams == "cmdline")

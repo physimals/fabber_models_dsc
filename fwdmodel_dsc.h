@@ -8,11 +8,9 @@
 
 #include "fabber_core/fwdmodel.h"
 #include "fabber_core/inference.h"
-#include "utils/tracer_plus.h"
 
 #include <string>
 using namespace std;
-using Utilities::Tracer_Plus;
 
 class DSCFwdModel : public FwdModel {
 public:

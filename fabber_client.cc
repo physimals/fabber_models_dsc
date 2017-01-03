@@ -8,7 +8,7 @@
 
 #include "fabber_core/fabber_core.h"
 
-// CEST models to be included from library
+// DSC models to be included from library
 #include "fwdmodel_dsc.h"
 
 int main(int argc, char** argv) {
