@@ -11,26 +11,10 @@
 // DSC models to be included from library
 #include "fwdmodel_dsc.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
+    //add the CEST models - these will autoregister at this point
+    DSCFwdModel::NewInstance();
 
-  //add the CEST models - these will autoregister at this point
-  DSCFwdModel::NewInstance();
-  
-  return execute(argc, argv);
-
+    return execute(argc, argv);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
