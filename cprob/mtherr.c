@@ -84,8 +84,13 @@ int code;
 /* Display string passed by calling program,
  * which is supposed to be the name of the
  * function in which the error occurred:
+ *
+ *
+ * REMOVED Martin Craig 9/3/17
+ * This is filling logfiles up with harmless
+ * underflow messages
  */
-printf( "\n%s ", name );
+/*printf( "\n%s ", name );*/
 
 /* Set global error message word */
 merror = code;
@@ -93,9 +98,9 @@ merror = code;
 /* Display error message defined
  * by the code argument.
  */
-if( (code <= 0) || (code >= 7) )
+/*if( (code <= 0) || (code >= 7) )
 	code = 0;
-printf( "%s error\n", ermsg[code] );
+printf( "%s error\n", ermsg[code] ); */
 
 /* Return to calling
  * program
