@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.7)
 
+add_subdirectory(cprob)
+
 set(MODELS_NAME dsc)
 set(MODELS_SRC fwdmodel_dsc.cc) 
 
@@ -23,8 +25,6 @@ find_path(FSL_EXT_INCLUDE_DIR libprob/libprob.h
             HINTS $ENV{FSLDIR}/extras/include REQUIRED)
 find_path(BOOST_INCLUDE_DIR boost/shared_ptr.hpp
           HINTS $ENV{FSLDIR}/extras/include/boost $ENV{FSLDIR}/extras/include/ REQUIRED)
-find_library(PROB_LIBRARY NAMES prob libprob
-             HINTS $ENV{FSLDIR}/extras/lib REQUIRED )
 
 Message("-- FSL headers in ${FSL_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${BOOST_INCLUDE_DIR}")
 Message("-- Fabber headers in ${FABBER_INCLUDE_DIR}/fabber_core")
@@ -47,10 +47,8 @@ find_library(ZNZ_LIBRARY NAMES znz libznz
              HINTS $ENV{FSLDIR}/lib REQUIRED )
 find_library(Z_LIBRARY NAMES z libz zlib zlibd 
                HINTS $ENV{FSLDIR}/lib REQUIRED )
-find_library(PROB_LIBRARY NAMES prob libprob
-             HINTS $ENV{FSLDIR}/extras/lib REQUIRED )
 
-set(LIBS ${FABBER_LIBRARY} ${FABBER_EXEC_LIBRARY}  ${NEWIMAGE_LIBRARY} ${FSLIO_LIBRARY} ${NIFTIIO_LIBRARY} ${MISCMATHS_LIBRARY} ${UTILS_LIBRARY} ${ZNZ_LIBRARY} ${Z_LIBRARY} ${NEWMAT_LIBRARY} ${PROB_LIBRARY})
+set(LIBS ${FABBER_LIBRARY} ${FABBER_EXEC_LIBRARY}  ${NEWIMAGE_LIBRARY} ${MISCMATHS_LIBRARY} ${FSLIO_LIBRARY} ${NIFTIIO_LIBRARY} ${MISCMATHS_LIBRARY} ${UTILS_LIBRARY} ${ZNZ_LIBRARY} ${Z_LIBRARY} ${NEWMAT_LIBRARY} dscprob)
 
 if (UNIX)
   set(LIBS ${LIBS} dl)
@@ -65,13 +63,12 @@ Message("-- Using newimage: ${NEWIMAGE_LIBRARY}")
 Message("-- Using niftiio: ${NIFTIIO_LIBRARY}")
 Message("-- Using newmat: ${NEWMAT_LIBRARY} ${NEWMAT_INCLUDE_DIR}")
 Message("-- Using newimage: ${NEWIMAGE_LIBRARY}")
-Message("-- Using prob: ${PROB_LIBRARY}")
 Message("-- Using zlib: ${Z_LIBRARY}")
 
 target_link_libraries(fabber_models_${MODELS_NAME} ${LIBS})
 target_link_libraries(fabber_${MODELS_NAME} ${LIBS})
 
-include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR}/libprob ${BOOST_INCLUDE_DIR})
+include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${BOOST_INCLUDE_DIR})
 
 # Extract GIT revision for versioning
 
