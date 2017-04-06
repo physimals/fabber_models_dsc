@@ -1,4 +1,4 @@
-/*  fwdmodel_asl_grase.h - Implements the GRASE model
+/*  fwdmodel_dsc.h - DSC model
 
     Michael Chappell, FMRIB Image Analysis Group
 
@@ -9,7 +9,7 @@
 #include "fabber_core/fwdmodel.h"
 
 #include <string>
-using namespace std;
+#include <vector>
 
 class DSCFwdModel : public FwdModel
 {
@@ -18,17 +18,16 @@ public:
 
     // Virtual function overrides
     virtual void Initialize(ArgsType &args);
-    virtual void Evaluate(const NEWMAT::ColumnVector &params,
-        NEWMAT::ColumnVector &result) const;
-    virtual vector<string> GetUsage() const;
-    virtual string ModelVersion() const;
+    virtual void Evaluate(const NEWMAT::ColumnVector &params, NEWMAT::ColumnVector &result) const;
+    virtual std::vector<std::string> GetUsage() const;
+    virtual std::string ModelVersion() const;
     virtual void GetOptions(std::vector<OptionSpec> &opts) const;
     virtual std::string GetDescription() const;
 
     virtual void DumpParameters(const NEWMAT::ColumnVector &vec,
         const string &indents = "") const;
 
-    virtual void NameParams(vector<string> &names) const;
+    virtual void NameParams(std::vector<std::string> &names) const;
     virtual int NumParams() const
     {
         return 2 + (infermtt ? 1 : 0) + (inferlambda ? 1 : 0) + (inferdelay ? 1 : 0) + (inferart ? 2 : 0) + (inferret ? 1 : 0) + (usecbv ? 1 : 0) + (dispoption ? 2 : 0);
@@ -77,7 +76,7 @@ protected:
 
     bool imageprior;
 
-    string convmtx;
+    std::string convmtx;
 
 private:
     /** Auto-register with forward model factory. */
