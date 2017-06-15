@@ -271,7 +271,6 @@ int sgngam = 0;
 extern int sgngam;
 extern double MAXLOG, MAXNUM, PI;
 
-#if 0
 #ifdef ANSIPROT
 extern double pow ( double, double );
 extern double log ( double );
@@ -290,7 +289,6 @@ double pow(), log(), exp(), sin(), polevl(), p1evl(), floor(), fabs();
 int Xisnan(), Xisfinite();
 static double stirf();
 double lgam();
-#endif
 #endif
 #ifndef INFINITY
   #ifdef INFINITIES
