@@ -5,7 +5,7 @@ PROJNAME = fabber_dsc
 USRINCFLAGS = -I${INC_NEWMAT} -I${INC_PROB} -I${INC_BOOST} -I..
 USRLDFLAGS = -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
 
-LIBS = -lutils -lnewimage -lmiscmaths -lnewmat -lfslio -lniftiio -lznz -lz -ldl
+LIBS = -Lcprob -lutils -lnewimage -lmiscmaths -ldscprob -lnewmat -lfslio -lniftiio -lznz -lz -ldl
 
 XFILES = fabber_dsc
 
@@ -19,8 +19,10 @@ OPTFLAGS = -ggdb
 #
 # Build
 #
+dscprob:
+	cd cprob && $(MAKE)
 
-all:	${XFILES} libfabber_models_dsc.a
+all:	dscprob ${XFILES} libfabber_models_dsc.a
 
 # models in a library
 libfabber_models_dsc.a : ${OBJS}
