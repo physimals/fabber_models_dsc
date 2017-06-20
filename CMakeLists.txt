@@ -68,7 +68,7 @@ Message("-- Using zlib: ${Z_LIBRARY}")
 target_link_libraries(fabber_models_${MODELS_NAME} ${LIBS})
 target_link_libraries(fabber_${MODELS_NAME} ${LIBS})
 
-include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${BOOST_INCLUDE_DIR})
+include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR}/libprob ${BOOST_INCLUDE_DIR})
 
 # Extract GIT revision for versioning
 
