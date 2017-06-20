@@ -37,7 +37,7 @@ public:
     virtual void HardcodedInitialDists(MVNDist &prior, MVNDist &posterior) const;
 
 protected:
-    NEWMAT::ColumnVector aifshift(const NEWMAT::ColumnVector &aif, const float delta, const float hdelt) const;
+    NEWMAT::ColumnVector aifshift(const NEWMAT::ColumnVector &aif, const double delta, const double hdelt) const;
     void createconvmtx(NEWMAT::LowerTriangularMatrix &A, const NEWMAT::ColumnVector aifnew) const;
 
     // Constants

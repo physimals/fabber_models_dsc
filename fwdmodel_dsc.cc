@@ -263,17 +263,17 @@ void DSCFwdModel::Evaluate(const ColumnVector &params, ColumnVector &result) con
     }
 
     // parameters that are inferred - extract and give sensible names
-    float cbf;
-    float gmu;    //mean of the transit time distribution
-    float lambda; // log lambda (fromt ransit distirbution)
-    float cbv;
-    float delta;
-    float sig0; //'inital' value of the signal
-    float artmag;
-    float artdelay;
-    float tracerret;
-    float disp_s;
-    float disp_p;
+    double cbf;
+    double gmu;    //mean of the transit time distribution
+    double lambda; // log lambda (fromt ransit distirbution)
+    double cbv;
+    double delta;
+    double sig0; //'inital' value of the signal
+    double artmag;
+    double artdelay;
+    double tracerret;
+    double disp_s;
+    double disp_p;
 
     // extract values from params
     cbf = paramcpy(cbf_index());
@@ -374,7 +374,7 @@ void DSCFwdModel::Evaluate(const ColumnVector &params, ColumnVector &result) con
     //upsampled timeseries
     int upsample;
     int nhtpts;
-    float hdelt;
+    double hdelt;
     ColumnVector htsamp;
 
     // Create vector of sampled times
@@ -486,7 +486,7 @@ void DSCFwdModel::Evaluate(const ColumnVector &params, ColumnVector &result) con
         gmu = exp(gmu);
     }
 
-    float gvar = gmu * gmu / lambda;
+    double gvar = gmu * gmu / lambda;
 
     residue = 1 - gammacdf(htsamp.t() - htsamp(1), gmu, gvar).t();
     residue(1) = 1; //always tru - avoid any roundoff errors
@@ -511,20 +511,17 @@ void DSCFwdModel::Evaluate(const ColumnVector &params, ColumnVector &result) con
         }
     }
 
-    ColumnVector sig_art(ntpts);
     result.ReSize(ntpts);
     for (int i = 1; i <= ntpts; i++)
     {
+        double sig = exp(-C_low(i) * te) - 1;
+
         if (inferart && artoption)
         {
-            sig_art(i) = C_art((i - 1) * upsample + 1);
-            sig_art(i) = exp(-sig_art(i) * te);
-            result(i) = sig0 * (1 + (sig_art(i) - 1) + (exp(-C_low(i) * te) - 1));
+            sig += exp(-C_art((i - 1) * upsample + 1) * te) - 1;
         }
-        else
-        {
-            result(i) = sig0 * exp(-C_low(i) * te);
-        }
+
+        result(i) = sig0 * (1 + sig);
     }
 
     for (int i = 1; i <= ntpts; i++)
@@ -545,12 +542,12 @@ FwdModel *DSCFwdModel::NewInstance()
     return new DSCFwdModel();
 }
 
-ColumnVector DSCFwdModel::aifshift(const ColumnVector &aif, const float delta, const float hdelt) const
+ColumnVector DSCFwdModel::aifshift(const ColumnVector &aif, const double delta, const double hdelt) const
 {
     // Shift a vector in time by interpolation (linear)
     // NB Makes assumptions where extrapolation is called for.
-    int nshift = floor(delta / hdelt);         // number of time points of shift associated with delta
-    float minorshift = delta - nshift * hdelt; // shift within the sampled time points (this is always a 'forward' shift)
+    int nshift = floor(delta / hdelt);          // number of time points of shift associated with delta
+    double minorshift = delta - nshift * hdelt; // shift within the sampled time points (this is always a 'forward' shift)
 
     ColumnVector aifnew(aif);
     int index;
