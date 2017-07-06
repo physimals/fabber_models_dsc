@@ -10,7 +10,7 @@ LIBS = -Lcprob -lutils -lnewimage -lmiscmaths -ldscprob -lnewmat -lfslio -lnifti
 XFILES = fabber_dsc
 
 # Forward models
-OBJS =  fwdmodel_dsc.o
+OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o
 
 # For debugging:
 OPTFLAGS = -ggdb

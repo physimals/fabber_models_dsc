@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.7)
 add_subdirectory(cprob)
 
 set(MODELS_NAME dsc)
-set(MODELS_SRC fwdmodel_dsc.cc) 
+set(MODELS_SRC fwdmodel_dsc.cc fwdmodel_dsc_cpi.cc spline_interpolator.cc) 
 
 add_library(fabber_models_${MODELS_NAME} SHARED ${MODELS_SRC} ${MODELS_NAME}_models.cc)
 add_executable(fabber_${MODELS_NAME} ${MODELS_SRC} fabber_client.cc)
@@ -68,7 +68,7 @@ Message("-- Using zlib: ${Z_LIBRARY}")
 target_link_libraries(fabber_models_${MODELS_NAME} ${LIBS})
 target_link_libraries(fabber_${MODELS_NAME} ${LIBS})
 
-include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${BOOST_INCLUDE_DIR})
+include_directories(SYSTEM ${FABBER_INCLUDE_DIR} ${NEWMAT_INCLUDE_DIR} ${FSL_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR} ${FSL_EXT_INCLUDE_DIR}/libprob ${BOOST_INCLUDE_DIR})
 
 # Extract GIT revision for versioning
 
