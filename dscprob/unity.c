@@ -23,7 +23,12 @@ extern double cos ( double );
 double log(), polevl(), p1evl(), exp(), cos();
 int Xisnan(), Xisfinite();
 #endif
+#ifdef _WIN32
+static double ZERO = 0.0;
+#define INFINITY (1.0/ZERO)
+#else
 extern double INFINITY;
+#endif
 
 /* log1p(x) = log(1 + x)  */
 

@@ -36,9 +36,7 @@ Copyright 2000 by Stephen L. Moshier
 */
 
 #include "mconf.h"
-#include "math.h"
 
-#if 0
 #ifdef ANSIPROT
 extern double fabs (double);
 extern double floor (double);
@@ -47,7 +45,6 @@ extern double exp (double);
 double fabs();
 double floor();
 double exp();
-#endif
 #endif
 
 #ifdef DEC
@@ -59,7 +56,10 @@ double exp();
 #endif
 
 extern double MAXLOG;
-#ifndef INFINITY
+#ifdef _WIN32
+static double ZERO = 0.0;
+#define INFINITY (1.0/ZERO)
+#else
 extern double INFINITY;
 #endif
 

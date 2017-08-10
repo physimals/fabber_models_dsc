@@ -24,7 +24,7 @@ extern int drand ( double *a );
 extern double fdtrc ( int ia, int ib, double x );
 extern double fdtr ( int ia, int ib, double x );
 extern double fdtri ( int ia, int ib, double y );
-extern double gamma ( double x );
+extern double true_gamma ( double x );
 extern double lgam ( double x );
 extern double gdtr ( double a, double b, double x );
 extern double gdtrc ( double a, double b, double x );
