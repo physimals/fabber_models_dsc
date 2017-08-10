@@ -19,17 +19,17 @@ OPTFLAGS = -ggdb
 #
 # Build
 #
-dscprob:
+dscprob/libdscprob.a:
 	cd dscprob && $(MAKE)
 
 all:	${XFILES} libfabber_models_dsc.a
 
 # models in a library
-libfabber_models_dsc.a : ${OBJS}
+libfabber_models_dsc.a : ${OBJS} 
 	${AR} -r $@ ${OBJS}
 
 # fabber built from the FSL fabbercore library including the models specifieid in this project
-fabber_dsc : fabber_client.o ${OBJS}
+fabber_dsc : fabber_client.o ${OBJS} dscprob/libdscprob.a
 	${CXX} ${CXXFLAGS} ${LDFLAGS} -o $@ $< ${OBJS} -lfabbercore -lfabberexec ${LIBS}
 
 # DO NOT DELETE
