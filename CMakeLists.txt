@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.7)
 
-add_subdirectory(cprob)
+add_subdirectory(dscprob)
 
 set(MODELS_NAME dsc)
 set(MODELS_SRC fwdmodel_dsc.cc fwdmodel_dsc_cpi.cc spline_interpolator.cc) 
@@ -48,8 +48,7 @@ find_library(ZNZ_LIBRARY NAMES znz libznz
 find_library(Z_LIBRARY NAMES z libz zlib zlibd 
                HINTS $ENV{FSLDIR}/lib REQUIRED )
 
-set(LIBS ${FABBER_LIBRARY} ${FABBER_EXEC_LIBRARY}  ${NEWIMAGE_LIBRARY} ${MISCMATHS_LIBRARY} ${FSLIO_LIBRARY} ${NIFTIIO_LIBRARY} ${MISCMATHS_LIBRARY} ${UTILS_LIBRARY} ${ZNZ_LIBRARY} ${Z_LIBRARY} ${NEWMAT_LIBRARY} dscprob)
-
+set(LIBS  ${FABBER_LIBRARY} ${FABBER_EXEC_LIBRARY} ${NEWIMAGE_LIBRARY} ${MISCMATHS_LIBRARY} ${FSLIO_LIBRARY} ${NIFTIIO_LIBRARY} ${MISCMATHS_LIBRARY} ${UTILS_LIBRARY} ${ZNZ_LIBRARY} ${Z_LIBRARY} ${NEWMAT_LIBRARY} dscprob)
 if (UNIX)
   set(LIBS ${LIBS} dl)
 endif(UNIX)

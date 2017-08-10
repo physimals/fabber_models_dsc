@@ -2,15 +2,15 @@ include ${FSLCONFDIR}/default.mk
 
 PROJNAME = fabber_dsc
 
-USRINCFLAGS = -I${INC_NEWMAT} -I${INC_PROB} -I${INC_BOOST} -I..
-USRLDFLAGS = -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
+USRINCFLAGS = -I.. -I${INC_NEWMAT} -I${INC_PROB} -I${INC_BOOST} 
+USRLDFLAGS = -Ldscprob -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
 
-LIBS = -Lcprob -lutils -lnewimage -lmiscmaths -ldscprob -lnewmat -lfslio -lniftiio -lznz -lz -ldl
+LIBS = -lutils -lnewimage -lmiscmaths -ldscprob -lnewmat -lfslio -lniftiio -lznz -lz -ldl
 
 XFILES = fabber_dsc
 
 # Forward models
-OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o
+OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o spline_interpolator.o
 
 # For debugging:
 OPTFLAGS = -ggdb
@@ -20,9 +20,9 @@ OPTFLAGS = -ggdb
 # Build
 #
 dscprob:
-	cd cprob && $(MAKE)
+	cd dscprob && $(MAKE)
 
-all:	dscprob ${XFILES} libfabber_models_dsc.a
+all:	${XFILES} libfabber_models_dsc.a
 
 # models in a library
 libfabber_models_dsc.a : ${OBJS}
