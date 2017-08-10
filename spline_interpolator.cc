@@ -8,7 +8,7 @@
 
 #include "spline_interpolator.h"
 
-#include "newmat/newmatio.h"
+#include "newmatio.h"
 
 #include <vector>
 #include <string>

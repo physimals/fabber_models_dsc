@@ -8,44 +8,40 @@
 
 /*  CCOPYRIGHT */
 
-#include "fabber_core/fwdmodel.h"
+#include "fwdmodel_dsc.h"
 
 #include <string>
 #include <vector>
 
-class DSCCpiFwdModel : public FwdModel
+/**
+ * Implementation which calculates the residual using spline interpolation
+ *
+ * The spline control points are model parameters
+ */
+class DSCCpiFwdModel : public DSCFwdModelBase
 {
 public:
     static FwdModel *NewInstance();
 
-    // Virtual function overrides
-    virtual void Initialize(ArgsType &args);
-    virtual void Evaluate(const NEWMAT::ColumnVector &params, NEWMAT::ColumnVector &result) const;
+    std::string ModelVersion() const;
+    void GetOptions(std::vector<OptionSpec> &opts) const;
+    std::string GetDescription() const;
     
-    virtual std::string ModelVersion() const;
-    virtual void GetOptions(std::vector<OptionSpec> &opts) const;
-    virtual std::string GetDescription() const;
-
-    virtual void NameParams(std::vector<std::string> &names) const;
-    virtual int NumParams() const;
-
-    virtual void HardcodedInitialDists(MVNDist &prior, MVNDist &posterior) const;
-
+    void Initialize(ArgsType &args);
+    void InitParams(MVNDist &posterior) const;
+    
 protected:
+    NEWMAT::ColumnVector CalculateResidual(const NEWMAT::ColumnVector &params) const;
 
-    NEWMAT::ColumnVector apply_delay(const NEWMAT::ColumnVector &sig, const double dt, const double delay, const double initial_value=0) const;
-    void createconvmtx(NEWMAT::LowerTriangularMatrix &A, const NEWMAT::ColumnVector aifnew) const;
+    void GetParameterDefaults(std::vector<Parameter> &params) const;
 
-    // scan parameters
-    double m_te;
-    double m_k;
-    double m_dt;
+    int cp_index() const { return disp_index() + (m_disp ? 1 : 0) + 1; }
+    int scaling_index() const { return cp_index() + (m_infer_cpt ? m_num_cps : 0) + m_num_cps; }
+
+    // Model parameters
     int m_num_cps;
-
-    bool m_aifsig;
-    bool m_disp;
-
-    NEWMAT::ColumnVector m_aif;
+    bool m_infer_cpt;
+    bool m_inc_scaling;
 
 private:
     /** Auto-register with forward model factory. */
