@@ -92,7 +92,7 @@ void DSCCpiFwdModel::GetParameterDefaults(std::vector<Parameter> &params) const
 void DSCCpiFwdModel::InitParams(MVNDist &posterior) const
 {
     // Voxelwise initialization of posterior.
-    assert(posterior.GetSize() == m_params.size());
+    assert(posterior.GetSize() == int(m_params.size()));
     int nt = data.Nrows(); 
     if (nt == 0) return;
 

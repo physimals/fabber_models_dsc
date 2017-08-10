@@ -176,7 +176,7 @@ ColumnVector DSCFwdModelBase::ApplyDispersion(const ColumnVector &aif, double di
     
     double s = exp(disp_s); // FIXME required or use param transforms?
     double p = exp(disp_p);
-    for (int i = 1; i <= nt; i++)
+    for (unsigned int i = 1; i <= nt; i++)
     {
         double t = (i - 1) * m_delt;
         vtf(i) = pow(s, 1 + s * p) * pow(t, s * p) * exp(-s * t) / fabber_dsc::true_gamma(1 + s * p);
@@ -194,9 +194,9 @@ ColumnVector DSCFwdModelBase::DoConvolution(const ColumnVector &v, const ColumnV
     if (m_convmtx == "simple")
     {
         // Simple convolution matrix
-        for (int i = 1; i <= nt; i++)
+        for (unsigned int i = 1; i <= nt; i++)
         {
-            for (int j = 1; j <= i; j++)
+            for (unsigned int j = 1; j <= i; j++)
             {
                 A(i, j) = aif(i - j + 1); //note we are using the local aif here! (i.e. it has been suitably time shifted)
             }
@@ -208,15 +208,14 @@ ColumnVector DSCFwdModelBase::DoConvolution(const ColumnVector &v, const ColumnV
         ColumnVector zero(1);
         zero = 0;
         aifextend = zero & aif & zero;
-        int x, y, z;
+        int x, z;
         //voltera convolution matrix (as defined by Sourbron 2007) - assume zeros outside aif range
-        for (int i = 1; i <= nt; i++)
+        for (unsigned int i = 1; i <= nt; i++)
         {
-            for (int j = 1; j <= i; j++)
+            for (unsigned int j = 1; j <= i; j++)
             {
                 //cout << i << "  " << j << endl;
                 x = i + 1;
-                y = j + 1;
                 z = i - j + 1;
                 if (j == 1)
                 {
@@ -439,7 +438,7 @@ NEWMAT::ColumnVector DSCFwdModel::CalculateResidual(const ColumnVector &params) 
     // Create vector of sampled times for use in dispersion and residue function
     unsigned int nt = data.Nrows();
     ColumnVector tsamp(nt);
-    for (int i = 1; i <= nt; i++)
+    for (unsigned int i = 1; i <= nt; i++)
     {
         tsamp(i) = (i - 1) * m_delt;
     }
