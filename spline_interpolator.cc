@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <string>
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -58,6 +59,13 @@ double SplineInterpolator::operator()(double x) const
 NaturalSplineInterpolator::NaturalSplineInterpolator(vector<double> &x, vector<double> &y)
 {
     int n = x.size()-1;
+    if (n < 1) {
+        throw std::length_error("Need at least two control points");
+    }
+    if (x.size() != y.size()) {
+        throw std::length_error("Number of x values must match number of y values");
+    }
+
     vector<double> a;
     a.insert(a.begin(), y.begin(), y.end());
     vector<double> b(n);
@@ -109,6 +117,13 @@ NaturalSplineInterpolator::NaturalSplineInterpolator(vector<double> &x, vector<d
  */
 PchipInterpolator::PchipInterpolator(vector<double> &x, vector<double> &y)
 {
+    if (x.size() < 2) {
+        throw std::length_error("Need at least two control points");
+    }
+    if (x.size() != y.size()) {
+        throw std::length_error("Number of x values must match number of y values");
+    }
+
     // Gradients at internal points 
     vector<double> dk = get_derivatives(x, y);
 
