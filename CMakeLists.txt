@@ -32,19 +32,19 @@ Message("-- Fabber headers in ${FABBER_INCLUDE_DIR}/fabber_core")
 find_library(FABBER_LIBRARY NAMES fabbercore libfabbercore
              HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 find_library(FABBER_EXEC_LIBRARY NAMES fabberexec libfabberexec
-             HINTS $ENV{FSLDIR}/lib ../fabber_core/Release ../fabber_core/Debug REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 find_library(NEWMAT_LIBRARY NAMES newmat libnewmat
-             HINTS $ENV{FSLDIR}/extras/lib REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/extras/lib $ENV{FSLDIR}/extras/lib REQUIRED )
 find_library(MISCMATHS_LIBRARY NAMES miscmaths libmiscmaths
-             HINTS $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 find_library(NEWIMAGE_LIBRARY NAMES newimage libnewimage
-             HINTS $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 find_library(FSLIO_LIBRARY NAMES fslio libfslio
-             HINTS $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 find_library(NIFTIIO_LIBRARY NAMES niftiio libniftiio
-             HINTS $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 find_library(ZNZ_LIBRARY NAMES znz libznz
-             HINTS $ENV{FSLDIR}/lib REQUIRED )
+             HINTS $ENV{FSLDEVDIR}/lib $ENV{FSLDIR}/lib REQUIRED )
 
 if(WIN32)
   # Only use FSL zlib on windows as other versions are unlikely to be
@@ -63,7 +63,6 @@ endif(UNIX)
 
 Message("-- Using Fabber libraries: ${FABBER_LIBRARY} ${FABBER_EXEC_LIBRARY}")
 Message("-- Using libznz: ${ZNZ_LIBRARY}")
-Message("-- Using libutils: ${UTILS_LIBRARY} ${UTILS_INCLUDE_DIR}")
 Message("-- Using miscmaths: ${MISCMATHS_LIBRARY}")
 Message("-- Using fslio: ${FSLIO_LIBRARY}")
 Message("-- Using newimage: ${NEWIMAGE_LIBRARY}")
