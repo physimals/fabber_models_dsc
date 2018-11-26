@@ -2,10 +2,17 @@ include ${FSLCONFDIR}/default.mk
 
 PROJNAME = fabber_dsc
 
-USRINCFLAGS = -I.. -I${INC_NEWMAT} -I${INC_PROB} -I${INC_BOOST} 
+USRINCFLAGS = -I${INC_NEWMAT} -I${INC_PROB} -I${INC_BOOST} 
 USRLDFLAGS = -Ldscprob -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
 
-LIBS = -lutils -lnewimage -lmiscmaths -ldscprob -lnewmat -lfslio -lniftiio -lznz -lz -ldl
+FSLVERSION= $(shell cat ${FSLDIR}/etc/fslversion | head -c 1)
+ifeq ($(FSLVERSION), 6) 
+  NIFTILIB = -lNewNifti
+else 
+  NIFTILIB = -lfslio -lniftiio 
+endif
+
+LIBS = -lutils -lnewimage -lmiscmaths -ldscprob -lnewmat ${NIFTILIB} -lznz -lz -ldl
 
 XFILES = fabber_dsc
 
@@ -13,8 +20,12 @@ XFILES = fabber_dsc
 OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o spline_interpolator.o
 
 # For debugging:
-OPTFLAGS = -ggdb
-#OPTFLAGS =
+#OPTFLAGS = -ggdb
+
+# Pass Git revision details
+GIT_SHA1:=$(shell git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty)
+GIT_DATE:=$(shell git log -1 --format=%ad --date=local)
+CXXFLAGS += -DGIT_SHA1=\"${GIT_SHA1}\" -DGIT_DATE="\"${GIT_DATE}\""
 
 #
 # Build
@@ -23,6 +34,9 @@ dscprob/libdscprob.a:
 	cd dscprob && $(MAKE)
 
 all:	${XFILES} libfabber_models_dsc.a
+
+clean:
+	${RM} -f *.o *.a dscprob/*.o dscprob/*.a depend.mk fabber_dsc
 
 # models in a library
 libfabber_models_dsc.a : ${OBJS} 
