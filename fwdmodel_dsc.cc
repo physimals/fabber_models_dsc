@@ -393,34 +393,30 @@ void DSCFwdModel::GetParameterDefaults(std::vector<Parameter> &params) const
     int p=params.size();
 
     if (m_infermtt) 
-        params.push_back(Parameter(p++, "transitm", DistParams(1.5, 0.1), DistParams(1.5, 0.1)));
-    if (m_inferlambda) // FIXME log
-        params.push_back(Parameter(p++, "lambda", DistParams(2.3, 1), DistParams(2.3, 1)));
-    if (m_inferret) {
+        params.push_back(Parameter(p++, "transitm", DistParams(4.5, 1.1), DistParams(4.5, 1.1), PRIOR_NORMAL, TRANSFORM_LOG()));
+    if (m_inferlambda)
+        params.push_back(Parameter(p++, "lambda", DistParams(10, 3), DistParams(10, 3), PRIOR_NORMAL, TRANSFORM_LOG()));
+    if (m_inferret)
         params.push_back(Parameter(p++, "ret", DistParams(0, 1e-4), DistParams(0, 1e-4)));
-    }
-    
-    if (m_usecbv) {
+    if (m_usecbv) 
         params.push_back(Parameter(p++, "cbv", DistParams(0, 1e-12), DistParams(0, 1e-12)));
-    }
-    
 }
 
 NEWMAT::ColumnVector DSCFwdModel::CalculateResidual(const ColumnVector &params) const
 {
-    double gmu=0;    //mean of the transit time distribution
-    double lambda=0; // log lambda (fromt ransit distirbution)
+    double gmu=0;    // mean of the transit time distribution
+    double lambda=0; // lambda (from transit distribution)
     double cbv=0;
     double tracerret=0;
 
     if (m_infermtt)
     {
-        gmu = params(gmu_index()); //this is the log of the mtt so we can have -ve values
+        gmu = params(gmu_index());
     }
 
     if (m_inferlambda)
     {
-        lambda = params(lambda_index()); //this is the log of lambda so we can have -ve values
+        lambda = params(lambda_index());
     }
 
     if (m_usecbv)
@@ -445,13 +441,10 @@ NEWMAT::ColumnVector DSCFwdModel::CalculateResidual(const ColumnVector &params) 
 
     ColumnVector residue(nt);
 
-    if (lambda > 10)
-        lambda = 10;
-    if (lambda < -10)
-        lambda = -10;
-    lambda = exp(lambda);
-    if (lambda > 100)
-        lambda = 100; //this was 10?
+    if (lambda > 1e5)
+        lambda = 1e5;
+    if (lambda < 1e-5)
+        lambda = 1e-5;
 
     if (m_usecbv)
     {
@@ -467,11 +460,10 @@ NEWMAT::ColumnVector DSCFwdModel::CalculateResidual(const ColumnVector &params) 
     }
     else
     {
-        if (gmu > 10)
-            gmu = 10;
-        if (gmu < -10)
-            gmu = -10;
-        gmu = exp(gmu);
+        if (gmu > 1e5)
+            gmu = 1e5;
+        if (gmu < 1e-5)
+            gmu = 1e-5;
     }
 
     double gvar = gmu * gmu / lambda;
