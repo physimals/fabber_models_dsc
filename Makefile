@@ -8,12 +8,12 @@ USRLDFLAGS = -Ldscprob -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
 FSLVERSION= $(shell cat ${FSLDIR}/etc/fslversion | head -c 1)
 ifeq ($(FSLVERSION), 5) 
   NIFTILIB = -lfslio -lniftiio 
-  LIB_NEWMAT = -lnewmat
+  LIB_NEWMAT = ${LIB_NEWMAT} -lnewmat
 else 
   NIFTILIB = -lNewNifti
 endif
 
-LIBS = -lutils -lnewimage -lmiscmaths -ldscprob ${LIB_NEWMAT} ${NIFTILIB} -lznz -lz -ldl
+LIBS = -lutils -lnewimage -lmiscmaths -ldscprob -L${LIB_NEWMAT} ${NIFTILIB} -lznz -lz -ldl
 
 XFILES = fabber_dsc
 
