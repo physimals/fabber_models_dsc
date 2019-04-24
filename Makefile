@@ -10,8 +10,11 @@ ifeq ($(FSLVERSION), 5)
   NIFTILIB = -lfslio -lniftiio 
   MATLIB = -lnewmat
 else 
+  UNAME := $(shell uname -s)
+  ifeq ($(UNAME), Linux)
+    MATLIB = -lopenblas
+  endif
   NIFTILIB = -lNewNifti
-  MATLIB = -lopenblas
 endif
 
 LIBS = -lutils -lnewimage -lmiscmaths -ldscprob ${MATLIB} ${NIFTILIB} -lznz -lz -ldl
