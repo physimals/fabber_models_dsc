@@ -80,8 +80,8 @@ void DSCFwdModelBase::GetParameterDefaults(std::vector<Parameter> &params) const
 
     int p=0;
     params.push_back(Parameter(p++, "sig0", DistParams(100, 1e6), DistParams(100, 1e6)));
-    params.push_back(Parameter(p++, "cbf", DistParams(0.1, 1e4), DistParams(0.1, 10), PRIOR_NORMAL, TRANSFORM_LOG()));
-    //params.push_back(Parameter(p++, "cbf", DistParams(0, 1e7), DistParams(0, 10)));
+    //params.push_back(Parameter(p++, "cbf", DistParams(0.1, 1e4), DistParams(0.1, 10), PRIOR_NORMAL, TRANSFORM_LOG()));
+    params.push_back(Parameter(p++, "cbf", DistParams(0, 1e12), DistParams(0, 10)));
     if (m_inferdelay) {
         params.push_back(Parameter(p++, "delay", DistParams(0, 25), DistParams(0, 25)));
     }
@@ -190,6 +190,7 @@ ColumnVector DSCFwdModelBase::DoConvolution(const ColumnVector &v, const ColumnV
     // create the convolution matrix
     unsigned int nt = aif.Nrows();
     LowerTriangularMatrix A(nt);
+    A = 0;
 
     if (m_convmtx == "simple")
     {
