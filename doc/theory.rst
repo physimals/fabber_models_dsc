@@ -89,8 +89,8 @@ might be better done with the signals once their effect on T2* has been accounte
 the option to do either, there is currently no clear evidence as to which is most physically accurate 
 and it is likely that both are an incomplete representation of the reality, see Chappell et al [3]_.
 
-The CPI model
--------------
+The CPI model [4]_
+------------------
 
 The CPI model (Control Point Interpolation) is an alternative model for the residue function :math:`R(t)`.
 Rather than base this function on physical assumptions, the CPI model simply defines a finite number
@@ -116,3 +116,8 @@ References
 .. [3] *Chappell, M.A., Mehndiratta, A., Calamante F., "Correcting for large vessel contamination in DSC 
    perfusion MRI by extension to a physiological model of the vasculature", e-print ahead of publication. 
    doi: 10.1002/mrm.25390*
+
+.. [4] *Mehndiratta A, MacIntosh BJ, Crane DE, Payne SJ, Chappell MA. A control point
+   interpolation method for the non-parametric quantification of cerebral haemodynamics from
+   dynamic susceptibility contrast MRI. NeuroImage 2013;64:560–570. 
+   doi: 10.1016/j.neuroimage.2012.08.083.*

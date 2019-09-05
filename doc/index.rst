@@ -6,21 +6,24 @@ Fabber models for DSC-MRI
    :alt: DSC example
    :align: right
 
-These models use the `Fabber <https://fabber-core.readthedocs.io/>`_
-Bayesian model fitting framework [1]_ to implement a two models
+These models use the 
+`Fabber Bayesian model fitting framework <https://fabber-core.readthedocs.io/>`_ 
+[1]_ to implement a two models
 for Dynamic Susceptibility Contrast MRI (DSC-MRI).
 
-If you are looking to process standard 
+If you are simply looking to process standard 
 DSC data you should probably look instead at the 
 `Verbena <https://verbena.readthedocs.io>`_ tool which
-uses Fabber_DSC as its modelling implementation.
+uses Fabber_DSC as its modelling implementation. This documentation
+provides a little more details on the model implementation for
+people who are interested in using the models directly.
 
 Getting FABBER_DSC
 ------------------
 
 The DSC models are included as part of `FSL <https://fsl.fmrib.ox.ac.uk/fsl/>`_. Version 6.0.1
 or later is strongly recommended - this documentation describes the version of the DSC
-models included in this FSL release.
+models included in the current FSL release.
 
 Models included
 ---------------
@@ -44,10 +47,16 @@ This model is selected using ``--model=dsc``. Options specific to this
 model are:
 
 --infermtt      If specified, infer mean transit time
---usecbv        
---inferlambda   
---inferret      
+--usecbv        Infer the CBV parameter as a means of modelling the transit time
+--inferlambda   Infer the lambda parameter in the mean transit time distribution
+--inferret      Infer tracer retention parameter. This is the proportion of the
+                tracer which remains in the tissue and is not removed by the residue
+                function.
                 
+``--infermtt`` and ``--usecbv`` are alternatives which cannot be used together. With
+``--usecbv`` the CBV parameter is estimated and the MTT is derived from that whereas
+with ``--infermtt` the MTT is estimated directly.
+
 The control point interpolation model [3]_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -73,6 +82,16 @@ Options common to both models
 --artoption     Add signals rather than concentrations
 --convmtx       Type of convolution matrix: simple or voltera
    
+``--disp`` attempts to model the dispersion of the AIF during vascular transport by 
+performing a convolution with a gamma function. The parameters of the convolution are
+estimated and returned as ``disp_s`` and ``disp_p``.
+
+``--artoption`` is only relevant when using ``--inferart``. It causes the arterial 
+contribution to the output to be a sum of the *signals* from the arterial and tissue
+components. Without this option, the DSC tracer *concentration* in a voxel is calculated
+from the sum of the concentration contributions from arterial and tissue components, 
+and the resulting DSC signal is derived from this.
+ 
 AIF specification
 ~~~~~~~~~~~~~~~~~
 
@@ -89,11 +108,6 @@ If ``--inferdelay`` is specified, the model will incorporate a voxelwise delay i
 of the bolus, i.e. the AIF for a voxel will be the specified curve time shifted by the delay.
 The delay value will be estimated within the Bayesian framework in the same way as the other
 model parameters.
-
-
-If using the Orton AIF [6]_ the parameters may be varied using the options described below. The
-defaults are those given in the Orton paper. The Parker AIF [7]_ uses hardcoded parameter values
-from the paper.
 
 Examples
 --------
@@ -126,4 +140,8 @@ References
 .. [2] *Ostergaard L, Chesler D, Weisskoff R, Sorensen A, Rosen B. Modeling Cerebral Blood Flow and Flow 
    Heterogeneity From Magnetic Resonance Residue Data. J Cereb Blood Flow Metab 1999;19:690–699.*
 
+.. [3] *Mehndiratta A, MacIntosh BJ, Crane DE, Payne SJ, Chappell MA. A control point
+   interpolation method for the non-parametric quantification of cerebral haemodynamics from
+   dynamic susceptibility contrast MRI. NeuroImage 2013;64:560–570. 
+   doi: 10.1016/j.neuroimage.2012.08.083.*
 
