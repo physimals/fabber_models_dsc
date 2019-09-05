@@ -51,7 +51,7 @@ on the T2* of the voxel which is described by a non-linear transformation.
 Where :math:`S_0` is the baseline signal before the bolus arrives and :math:`r_2` is the T2 relaxivity 
 of the contrast agent.
 
-In VERBENA it is this final 
+In FABBER_DSC it is this final 
 estimated signal that is compared to the data and used to find the optimal parameters using a Bayesian 
 inference algorithm. Additionally the potential for a time delay between the supplied AIF (often 
 measured at a remote location from the tissue) and the tissue signal is included in the model.
@@ -59,20 +59,20 @@ measured at a remote location from the tissue) and the tissue signal is included
 The Modified Vascular Model
 ---------------------------
 
-VERBENA implements a modified version of the Vascular Model whereby the MTT is not pre-calculated 
+FABBER_DSC implements a modified version of the Vascular Model whereby the MTT is not pre-calculated 
 from the data, but instead is a further parameter to be estimated as part of the inference applied 
 to the data. This removes the risk of bias from the separate MTT calculation and 
 also allows for a separate macro vascular component to be implemented within the model.
 
-The other model parameter used by Verbena is named lambda and is identified with :math:`\alpha`.
-in the residue function model. Hence in it's basic form the Verbena model contains three parameters: 
+The other model parameter is named ``lambda`` and is identified with :math:`\alpha`.
+in the residue function model. Hence in it's basic form the model contains three parameters: 
 ``CBF``, ``MTT`` and ``lambda``. An additional parameter ``delta`` can be used to model a delay in
 the arrival of the arterial input.
 
 Macro Vascular Contamination
 ----------------------------
 
-VERBENA has the option to include a macro vascular component to the model. This combines the estimated 
+FABBER_DSC has the option to include a macro vascular component to the model. This combines the estimated 
 concentration time curve from the (modified) vascular model with a scaled version of the AIF, where the 
 AIF is representative of contrast that is still within the large arteries during imaging and the scaling 
 is a (relative) measure of arterial blood volume. 
@@ -85,7 +85,7 @@ present within the brain, but only occur in voxels that contain large arteries.
 The combination of 
 tissue and macro vascular contributions could be done in terms of the concentrations of contrast in the 
 voxel. However, since in DSC it is the T2* effect of the concentration that is measured, the summation 
-might be better done with the signals once their effect on T2* has been accounted for. VERBENA offers 
+might be better done with the signals once their effect on T2* has been accounted for. FABBER_DSC offers 
 the option to do either, there is currently no clear evidence as to which is most physically accurate 
 and it is likely that both are an incomplete representation of the reality, see Chappell et al [3]_.
 

@@ -121,7 +121,7 @@ Standard vascular model on DSC data collected every 6s using a measured AIF sign
                --aif=aif_signal.txt --aifsig --inferdelay
                --output=dsc_output --overwrite --save-model-fit
 
-Similar, but using the CPI model and an AIF concentration-time curve
+Similar, but using the CPI model and an AIF concentration-time curve::
 
     fabber_dsc --data=dsc_data --mask=brain_mask 
                --method=vb --noise=white 
