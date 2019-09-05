@@ -1,9 +1,9 @@
 Fabber models for DSC-MRI
 =========================
 
-.. image:: dsc_example.png
+.. image:: dsc_example.jpg
    :scale: 75%
-   :alt: DCE example
+   :alt: DSC example
    :align: right
 
 These models use the `Fabber <https://fabber-core.readthedocs.io/>`_
@@ -51,7 +51,7 @@ model are:
 The control point interpolation model [3]_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This model is selected using ``--model=dce_cpi``. Options are:
+This model is selected using ``--model=dsc_cpi``. Options are:
 
 --num-cps       Number of control points
 --infer-cpt     If specified, infer the time position of control points as well as their amplitude
