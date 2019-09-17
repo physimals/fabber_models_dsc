@@ -81,7 +81,7 @@ void DSCFwdModelBase::GetParameterDefaults(std::vector<Parameter> &params) const
     int p=0;
     params.push_back(Parameter(p++, "sig0", DistParams(100, 1e6), DistParams(100, 1e6)));
     //params.push_back(Parameter(p++, "cbf", DistParams(0.1, 1e4), DistParams(0.1, 10), PRIOR_NORMAL, TRANSFORM_LOG()));
-    params.push_back(Parameter(p++, "cbf", DistParams(0, 1e12), DistParams(0, 10)));
+    params.push_back(Parameter(p++, "cbf", DistParams(0.1, 1e12), DistParams(0.1, 10)));
     if (m_inferdelay) {
         params.push_back(Parameter(p++, "delay", DistParams(0, 25), DistParams(0, 25)));
     }
@@ -100,6 +100,13 @@ void DSCFwdModelBase::GetOutputs(std::vector<std::string> &outputs) const
     outputs.push_back("dsc_residual");
 }
     
+void DSCFwdModelBase::InitVoxelPosterior(MVNDist &posterior) const
+{
+    // Initialize signal offset using first data value
+    double sig0_data = data(1);
+    posterior.means(1) = sig0_data;
+}
+
 ColumnVector DSCFwdModelBase::GetAIF() const
 {
     ColumnVector aif;
