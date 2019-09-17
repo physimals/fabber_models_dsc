@@ -30,6 +30,7 @@ public:
     virtual void GetOptions(std::vector<OptionSpec> &opts) const;
     virtual void EvaluateModel(const NEWMAT::ColumnVector &params, NEWMAT::ColumnVector &result, const std::string &key="") const;
     virtual void GetOutputs(std::vector<std::string> &outputs) const;
+    virtual void InitVoxelPosterior(MVNDist &posterior) const;
     
 protected:
     /**
