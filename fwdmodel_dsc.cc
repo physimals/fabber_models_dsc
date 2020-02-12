@@ -25,7 +25,7 @@ using MISCMATHS::gammacdf;
 
 static OptionSpec BASE_OPTIONS[] = {
     { "te", OPT_FLOAT, "TE echo time in s", OPT_REQ, "" },
-    { "delt", OPT_FLOAT, "Time separation between volumes in minutes", OPT_REQ, "" },
+    { "delt", OPT_FLOAT, "Time separation between volumes in seconds", OPT_REQ, "" },
     { "aif", OPT_MATRIX, "ASCII matrix containing the arterial signal", OPT_NONREQ, "none" },
     { "aifsig", OPT_BOOL, "Indicate that the AIF is a signal curve", OPT_NONREQ, "none" },
     { "aifconc", OPT_BOOL, "Indicate that the AIF is a concentation curve", OPT_NONREQ, "none" },
@@ -80,8 +80,7 @@ void DSCFwdModelBase::GetParameterDefaults(std::vector<Parameter> &params) const
 
     int p=0;
     params.push_back(Parameter(p++, "sig0", DistParams(100, 1e6), DistParams(100, 1e6)));
-    //params.push_back(Parameter(p++, "cbf", DistParams(0.1, 1e4), DistParams(0.1, 10), PRIOR_NORMAL, TRANSFORM_LOG()));
-    params.push_back(Parameter(p++, "cbf", DistParams(0.1, 1e12), DistParams(0.1, 10)));
+    params.push_back(Parameter(p++, "cbf", DistParams(1, 1e6), DistParams(1, 10)));
     if (m_inferdelay) {
         params.push_back(Parameter(p++, "delay", DistParams(0, 25), DistParams(0, 25)));
     }
@@ -90,7 +89,7 @@ void DSCFwdModelBase::GetParameterDefaults(std::vector<Parameter> &params) const
         params.push_back(Parameter(p++, "disp_p", DistParams(0, 1e7), DistParams(0, 1e7), PRIOR_NORMAL, TRANSFORM_IDENTITY()));
     }
     if (m_inferart) {
-        params.push_back(Parameter(p++, "abv", DistParams(0, 1e12), DistParams(0, 10)));
+        params.push_back(Parameter(p++, "abv", DistParams(0, 1e6), DistParams(0, 10)));
         params.push_back(Parameter(p++, "artdelay", DistParams(0, 25), DistParams(0, 25)));
     }
 }
@@ -329,15 +328,19 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
         //cerr << "Result: " << result.t();
     }
 
+    bool warned = false;
     for (int i = 1; i <= nt; i++)
     {
         if (isnan(result(i)) || isinf(result(i)))
         {
-            LOG << "Warning NaN or inf in result" << endl;
-            LOG << "result: " << result.t() << endl;
-            LOG << "params: " << params.t() << endl;
-            result = 0.0;
-            break;
+            if (!warned) {
+                LOG << "Warning NaN or inf in result" << endl;
+                LOG << "data: " << data.t() << endl;
+                LOG << "result: " << result.t() << endl;
+                LOG << "params: " << params.t() << endl;
+                warned = true;
+            }
+            result(i) = 0.0;
         }
     }
 }
@@ -407,7 +410,7 @@ void DSCFwdModel::GetParameterDefaults(std::vector<Parameter> &params) const
     if (m_inferret)
         params.push_back(Parameter(p++, "ret", DistParams(0, 1e-4), DistParams(0, 1e-4)));
     if (m_usecbv) 
-        params.push_back(Parameter(p++, "cbv", DistParams(0, 1e-12), DistParams(0, 1e-12)));
+        params.push_back(Parameter(p++, "cbv", DistParams(0, 1e-6), DistParams(0, 1e-6)));
 }
 
 NEWMAT::ColumnVector DSCFwdModel::CalculateResidual(const ColumnVector &params) const
