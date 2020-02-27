@@ -248,11 +248,14 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
     int nt = data.Nrows();
     double sig0 = params(sig0_index());
     double cbf = params(cbf_index());
+    if (cbf < 0)
+    {
+        cbf = 0;
+    }
 
     double delay = 0;
     if (m_inferdelay) delay = params(delay_index());
 
-#if 0
     // sensible limits on delay (beyond which it gets silly trying to estimate it)
     if (delay > nt / 2 * m_delt)
     {
@@ -262,7 +265,6 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
     {
         delay = -nt / 2 * m_delt;
     }
-#endif
 
     double disp_s=0, disp_p=0;
     if (m_disp) {
@@ -274,6 +276,20 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
     if (m_inferart) {
         artmag = params(art_index());
         artdelay = params(art_index()+1);
+    }
+    if (artmag < 0)
+    {
+        artmag = 0;
+    }
+
+    // sensible limits on delay (beyond which it gets silly trying to estimate it)
+    if (artdelay > nt / 2 * m_delt)
+    {
+        artdelay = nt / 2 * m_delt;
+    }
+    if (artdelay < -nt / 2 * m_delt)
+    {
+        artdelay = -nt / 2 * m_delt;
     }
 
     // Get original unshifted AIF
