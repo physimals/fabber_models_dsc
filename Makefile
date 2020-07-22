@@ -17,7 +17,7 @@ else
   NIFTILIB = -lNewNifti
 endif
 
-LIBS = -lutils -lnewimage -lmiscmaths -ldscprob ${MATLIB} ${NIFTILIB} -lznz -lz -ldl
+LIBS = -lnewimage -lmiscmaths -lutils -ldscprob ${MATLIB} ${NIFTILIB} -lznz -lz -ldl
 
 XFILES = fabber_dsc
 
