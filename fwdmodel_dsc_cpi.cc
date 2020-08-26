@@ -67,7 +67,7 @@ string DSCCpiFwdModel::ModelVersion() const
 void DSCCpiFwdModel::Initialize(FabberRunData &args)
 {
     DSCFwdModelBase::Initialize(args);
-    
+
     m_num_cps = args.GetInt("num-cps", 0);
     m_infer_cpt = args.GetBool("infer-cpt");
     m_inc_scaling = args.GetBool("inc-scaling");
@@ -93,7 +93,7 @@ void DSCCpiFwdModel::InitParams(MVNDist &posterior) const
 {
     // Voxelwise initialization of posterior.
     assert(posterior.GetSize() == int(m_params.size()));
-    int nt = data.Nrows(); 
+    int nt = data.Nrows();
     if (nt == 0) return;
 
     // Set an initial guess for sig0 from the first data point
@@ -101,15 +101,15 @@ void DSCCpiFwdModel::InitParams(MVNDist &posterior) const
 
 #if 0
     if (m_infer_cpt) {
-        // Set initial control points to be evenly spaced 
+        // Set initial control points to be evenly spaced
         unsigned int p = cp_index();
-        
+
         double spacing = double(nt)/m_num_cps;
         for (int i=0; i<m_num_cps-1; i++) {
-            //posterior.means(p) = spacing - 0.1; 
+            //posterior.means(p) = spacing - 0.1;
             //posterior.means(p) = 1.0/m_num_cps - 0.1;
             //posterior.means(p) = 1.0/m_num_cps - 0.1;
-            p += 2;        
+            p += 2;
         }
     }
 #endif
@@ -153,7 +153,7 @@ ColumnVector DSCCpiFwdModel::CalculateResidual(const ColumnVector &params) const
         cp_time.push_back(tpos);
     }
 
-    // Put a control point beyond the end with amplitude zero 
+    // Put a control point beyond the end with amplitude zero
     cp_amp.push_back(0);
     double last_time = cp_time[m_num_cps] + 1;
     if (last_time < nt) last_time = nt;

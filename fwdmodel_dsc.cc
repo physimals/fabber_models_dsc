@@ -98,7 +98,7 @@ void DSCFwdModelBase::GetOutputs(std::vector<std::string> &outputs) const
 {
     outputs.push_back("dsc_residual");
 }
-    
+
 void DSCFwdModelBase::InitVoxelPosterior(MVNDist &posterior) const
 {
     // Initialize signal offset using first data value
@@ -130,7 +130,7 @@ ColumnVector DSCFwdModelBase::GetAIF() const
 
     if (m_aifsig)
     {
-        // AIF is a signal not a concentration 
+        // AIF is a signal not a concentration
         aif = -1 / m_te * log(aif / aif(1));
     }
     return aif;
@@ -139,11 +139,11 @@ ColumnVector DSCFwdModelBase::GetAIF() const
 ColumnVector DSCFwdModelBase::ApplyDelay(const ColumnVector &sig, const double delt, const double delay, const double initial_value) const
 {
     // Number of whole time points of shift.
-    int nshift = floor(delay / delt);  
+    int nshift = floor(delay / delt);
 
     // Fractional part of the shift
-    double fshift = (delay / delt) - nshift; 
-    
+    double fshift = (delay / delt) - nshift;
+
     ColumnVector signew(sig);
     int index;
     for (int i = 1; i <= sig.Nrows(); i++)
@@ -151,10 +151,10 @@ ColumnVector DSCFwdModelBase::ApplyDelay(const ColumnVector &sig, const double d
         index = i - nshift;
         if (index == 1)
         {
-            // linear interpolation with initial value as 'previous' time point. 
+            // linear interpolation with initial value as 'previous' time point.
             // Only possible if delay is > 0, so fshift > 0
             signew(i) = sig(1) * (1-fshift) + initial_value*fshift;
-        } 
+        }
         else if (index < 1)
         {
             // Assume sig takes initial_value before zeroth time point
@@ -164,7 +164,7 @@ ColumnVector DSCFwdModelBase::ApplyDelay(const ColumnVector &sig, const double d
         {
             // Beyond the final time point - assume signal takes the value of the final time point
             signew(i) = sig(sig.Nrows());
-        } 
+        }
         else
         {
             // Linear interpolation
@@ -179,7 +179,7 @@ ColumnVector DSCFwdModelBase::ApplyDispersion(const ColumnVector &aif, double di
 {
     unsigned int nt = aif.Nrows();
     ColumnVector vtf(nt);
-    
+
     double s = exp(disp_s); // FIXME required or use param transforms?
     double p = exp(disp_p);
     for (unsigned int i = 1; i <= nt; i++)
@@ -262,14 +262,14 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
         artmag = params(art_index());
         artdelay = params(art_index()+1);
     }
-    
+
     // Get original unshifted AIF
     ColumnVector aif_unshifted = GetAIF();
 
     // Apply delay and dispersion
     ColumnVector aif = ApplyDelay(aif_unshifted, m_delt, delay);
     if (m_disp) aif = ApplyDispersion(aif, disp_s, disp_p);
-        
+
     ColumnVector C_art(nt);
     if (m_inferart)
     {
@@ -280,7 +280,7 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
     // Calculation of the residual function
     ColumnVector residual = CalculateResidual(params);
 
-    result.ReSize(nt);   
+    result.ReSize(nt);
     if (key == "dsc_residual") {
         // Output the residual function
         for (int i = 1; i <= nt; i++)
@@ -331,7 +331,7 @@ void DSCFwdModelBase::EvaluateModel(const ColumnVector &params, ColumnVector &re
         }
     }
 }
-	
+
 FactoryRegistration<FwdModelFactory, DSCFwdModel>
     DSCFwdModel::registration("dsc");
 
@@ -372,7 +372,7 @@ string DSCFwdModel::ModelVersion() const
 void DSCFwdModel::Initialize(FabberRunData &args)
 {
     DSCFwdModelBase::Initialize(args);
-    
+
     // Options of the model
     m_infermtt = args.GetBool("infermtt");
     m_usecbv = args.GetBool("usecbv");
@@ -390,13 +390,13 @@ void DSCFwdModel::GetParameterDefaults(std::vector<Parameter> &params) const
     DSCFwdModelBase::GetParameterDefaults(params);
     int p=params.size();
 
-    if (m_infermtt) 
+    if (m_infermtt)
         params.push_back(Parameter(p++, "transitm", DistParams(4.5, 1.1), DistParams(4.5, 1.1), PRIOR_NORMAL, TRANSFORM_LOG()));
     if (m_inferlambda)
         params.push_back(Parameter(p++, "lambda", DistParams(10, 3), DistParams(10, 3), PRIOR_NORMAL, TRANSFORM_LOG()));
     if (m_inferret)
         params.push_back(Parameter(p++, "ret", DistParams(0, 1e-4), DistParams(0, 1e-4)));
-    if (m_usecbv) 
+    if (m_usecbv)
         params.push_back(Parameter(p++, "cbv", DistParams(0, 1e-6), DistParams(0, 1e-6)));
 }
 
@@ -421,7 +421,7 @@ NEWMAT::ColumnVector DSCFwdModel::CalculateResidual(const ColumnVector &params) 
     {
         cbv = params(cbv_index());
     }
-    
+
     if (m_inferret)
     {
         double ret = params(ret_index());

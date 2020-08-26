@@ -1,7 +1,7 @@
-/** 
+/**
  * spline_interpolator.cc - Utility classes for 1D cubic spline interpolation
  *
- * Copyright (C) 2017 University of Oxford 
+ * Copyright (C) 2017 University of Oxford
  */
 
 /*  CCOPYRIGHT */
@@ -52,7 +52,7 @@ double SplineInterpolator::operator()(double x) const
 
 /**
  * Based on code found on StackOverflow, which was in turn derived from an algorithm on Wikipedia
- * How trustworthy is that? Not very as it turned out, since the original code had a memory bug (fixed 
+ * How trustworthy is that? Not very as it turned out, since the original code had a memory bug (fixed
  * in below)
  *
  * https://stackoverflow.com/questions/1204553/are-there-any-good-libraries-for-solving-cubic-splines-in-c
@@ -128,10 +128,10 @@ PchipInterpolator::PchipInterpolator(vector<double> &x, vector<double> &y)
         throw std::length_error("Number of x values must match number of y values");
     }
 
-    // Gradients at internal points 
+    // Gradients at internal points
     vector<double> dk = get_derivatives(x, y);
 
-    for (unsigned int n=0; n<x.size()-1; n++) 
+    for (unsigned int n=0; n<x.size()-1; n++)
     {
         double x1 = x[n];
         double x2 = x[n+1];
@@ -152,7 +152,7 @@ Spline PchipInterpolator::get_spline(double x1, double y1, double m1, double x2,
 
     A << 0 << 0 << 0 << 1
       << (x2-x1)*(x2-x1)*(x2-x1) << (x2-x1)*(x2-x1) << (x2-x1) << 1
-      << 0 << 0 << 1 << 0 
+      << 0 << 0 << 1 << 0
       << 3*(x2-x1)*(x2-x1) << 2*(x2-x1) << 1 << 0;
 
     ColumnVector B(4);
@@ -183,7 +183,7 @@ double PchipInterpolator::edge_case(double h0, double h1, double m0, double m1)
     else if ((m0*m1 < 0) && (abs(d) > 3.0*abs(m0))) {
         d = 3.0*m0;
     }
-    
+
     return d;
 }
 
@@ -197,7 +197,7 @@ vector<double> PchipInterpolator::get_derivatives(vector<double> &x, vector<doub
 {
     vector<double> dk;
 
-    // Gradients at internal points 
+    // Gradients at internal points
     vector<double> mk, hk;
     for (unsigned int k=0; k<x.size()-1; k++) {
         hk.push_back((x[k+1] - x[k]));
