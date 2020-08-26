@@ -15,7 +15,7 @@
 
 #include <newimage/newimageall.h>
 #include <miscmaths/miscprob.h>
-#include <newmatio.h>
+#include "armawrap/newmat.h"
 
 #include <iostream>
 #include <stdexcept>

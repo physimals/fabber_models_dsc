@@ -15,7 +15,7 @@
 #include <fabber_core/transforms.h>
 
 #include <newimage/newimageall.h>
-#include <newmatio.h>
+#include "armawrap/newmat.h"
 
 #include <stdexcept>
 #include <iostream>
