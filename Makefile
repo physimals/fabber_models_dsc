@@ -2,24 +2,13 @@ include ${FSLCONFDIR}/default.mk
 
 PROJNAME = fabber_dsc
 
-USRINCFLAGS = -I${INC_NEWMAT} -I${INC_PROB} -I${INC_CPROB} -I${INC_BOOST}
-USRLDFLAGS = -Ldscprob -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
-
-FSLVERSION= $(shell cat ${FSLDIR}/etc/fslversion | head -c 1)
-ifeq ($(FSLVERSION), 5) 
-  NIFTILIB = -lfslio -lniftiio 
-  MATLIB = -lnewmat
-else 
-  UNAME := $(shell uname -s)
-  ifeq ($(UNAME), Linux)
-    MATLIB = -lopenblas
-  endif
-  NIFTILIB = -lNewNifti
-endif
-
-LIBS = -lnewimage -lmiscmaths -lutils -ldscprob ${MATLIB} ${NIFTILIB} -lznz -lz -ldl
+USRLDFLAGS = -Ldscprob
+LIBS =  -lfsl-fabber_models_dsc -lfsl-fabberexec -lfsl-fabbercore \
+        -lfsl-dscprob -lfsl-newimage -lfsl-miscmaths -lfsl-utils \
+        -lfsl-NewNifti -lfsl-dscprob -lfsl-znz -ldl
 
 XFILES = fabber_dsc
+SOFILES = libfsl-fabber_models_dsc.so dscprob/libfsl-dscprob.so
 
 # Forward models
 OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o spline_interpolator.o
@@ -35,20 +24,20 @@ CXXFLAGS += -DGIT_SHA1=\"${GIT_SHA1}\" -DGIT_DATE="\"${GIT_DATE}\""
 #
 # Build
 #
-dscprob/libdscprob.a:
-	cd dscprob && $(MAKE)
+dscprob/libfsl-dscprob.so:
+	$(MAKE) -C dscprob CC="${CC}" CFLAGS="${CFLAGS}"
 
-all:	${XFILES} libfabber_models_dsc.a
+all: ${XFILES} ${SOFILES}
 
 clean:
-	${RM} -f *.o *.a dscprob/*.o dscprob/*.a depend.mk fabber_dsc
+	${RM} -f *.o *.so dscprob/*.o dscprob/*.so depend.mk fabber_dsc
 
 # models in a library
-libfabber_models_dsc.a : ${OBJS} 
-	${AR} -r $@ ${OBJS}
+libfsl-fabber_models_dsc.so : ${OBJS}
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^
 
 # fabber built from the FSL fabbercore library including the models specifieid in this project
-fabber_dsc : fabber_client.o ${OBJS} dscprob/libdscprob.a
-	${CXX} ${CXXFLAGS} ${LDFLAGS} -o $@ $< ${OBJS} -lfabbercore -lfabberexec ${LIBS}
+fabber_dsc : fabber_client.o libfsl-fabber_models_dsc.so dscprob/libfsl-dscprob.so
+	${CXX} ${CXXFLAGS} -o $@ $< ${LDFLAGS}
 
 # DO NOT DELETE
