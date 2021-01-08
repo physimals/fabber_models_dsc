@@ -3,8 +3,8 @@ include ${FSLCONFDIR}/default.mk
 PROJNAME = fabber_dsc
 
 USRLDFLAGS = -Ldscprob
-LIBS =  -lfsl-fabber_models_dsc -lfsl-fabberexec -lfsl-fabbercore \
-        -lfsl-dscprob -lfsl-newimage -lfsl-miscmaths -lfsl-utils \
+LIBS =  -lfsl-fabberexec -lfsl-fabbercore \
+        -lfsl-newimage -lfsl-miscmaths -lfsl-utils \
         -lfsl-NewNifti -lfsl-dscprob -lfsl-znz -ldl
 
 XFILES = fabber_dsc
@@ -34,10 +34,8 @@ clean:
 
 # models in a library
 libfsl-fabber_models_dsc.so : ${OBJS}
-	$(CXX) $(CXXFLAGS) -shared -o $@ $^
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^ ${LDFLAGS}
 
 # fabber built from the FSL fabbercore library including the models specifieid in this project
 fabber_dsc : fabber_client.o libfsl-fabber_models_dsc.so dscprob/libfsl-dscprob.so
-	${CXX} ${CXXFLAGS} -o $@ $< ${LDFLAGS}
-
-# DO NOT DELETE
+	${CXX} ${CXXFLAGS} -o $@ $< -lfsl-fabber_models_dsc -lfsl-dscprob ${LDFLAGS}
