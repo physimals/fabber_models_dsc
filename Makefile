@@ -33,8 +33,8 @@ clean:
 	${RM} -f *.o *.so dscprob/*.o dscprob/*.so depend.mk fabber_dsc
 
 # models in a library
-libfsl-fabber_models_dsc.so : ${OBJS}
-	$(CXX) $(CXXFLAGS) -shared -o $@ $^ ${LDFLAGS}
+libfsl-fabber_models_dsc.so : ${OBJS} dscprob/libfsl-dscprob.so:
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^ -lfsl-dscprob ${LDFLAGS}
 
 # fabber built from the FSL fabbercore library including the models specifieid in this project
 fabber_dsc : fabber_client.o libfsl-fabber_models_dsc.so dscprob/libfsl-dscprob.so
