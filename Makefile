@@ -5,7 +5,7 @@ PROJNAME = fabber_dsc
 USRLDFLAGS = -Ldscprob
 LIBS =  -lfsl-fabberexec -lfsl-fabbercore \
         -lfsl-newimage -lfsl-miscmaths -lfsl-utils \
-        -lfsl-NewNifti -lfsl-dscprob -lfsl-znz -ldl
+        -lfsl-NewNifti -lfsl-znz -ldl
 
 XFILES = fabber_dsc
 SOFILES = libfsl-fabber_models_dsc.so dscprob/libfsl-dscprob.so
