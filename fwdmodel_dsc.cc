@@ -20,8 +20,10 @@
 #include <iostream>
 #include <stdexcept>
 
+using namespace std;
 using namespace NEWMAT;
 using MISCMATHS::gammacdf;
+using MISCMATHS::log;
 
 static OptionSpec BASE_OPTIONS[] = {
     { "te", OPT_FLOAT, "TE echo time in s", OPT_REQ, "" },

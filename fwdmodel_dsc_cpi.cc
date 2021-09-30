@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cmath>
 
+using namespace std;
 using namespace NEWMAT;
 
 FactoryRegistration<FwdModelFactory, DSCCpiFwdModel>
