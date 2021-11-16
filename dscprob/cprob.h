@@ -1,5 +1,5 @@
-#if !defined(__CPROB_H)
-#define __CPROB_H
+#if !defined(__DSC_CPROB_H)
+#define __DSC_CPROB_H
 
 #ifdef __cplusplus
 extern "C" {
