@@ -7,7 +7,6 @@
 /*  CCOPYRIGHT */
 
 #include "fwdmodel_dsc.h"
-#include "dscprob/dscprob.h"
 
 #include <fabber_core/easylog.h>
 #include <fabber_core/tools.h>
@@ -19,6 +18,24 @@
 
 #include <iostream>
 #include <stdexcept>
+
+
+/*
+ * For FSL >=6.0.6, we link against
+ * the standard fsl/cprob library.
+ */
+#ifdef FSL_GE_606
+#include "cprob/cprob.h"
+using CPROB::true_gamma;
+/*
+ * For FSL <=6.0.5 we link against
+ * our own copy of cprob
+ */
+#else
+#include "dscprob/dscprob.h"
+using fabber_dsc::true_gamma;
+#endif
+
 
 using namespace std;
 using namespace NEWMAT;
@@ -187,7 +204,7 @@ ColumnVector DSCFwdModelBase::ApplyDispersion(const ColumnVector &aif, double di
     for (unsigned int i = 1; i <= nt; i++)
     {
         double t = (i - 1) * m_delt;
-        vtf(i) = pow(s, 1 + s * p) * pow(t, s * p) * exp(-s * t) / fabber_dsc::true_gamma(1 + s * p);
+        vtf(i) = pow(s, 1 + s * p) * pow(t, s * p) * exp(-s * t) / true_gamma(1 + s * p);
     }
 
     return DoConvolution(vtf, aif);
