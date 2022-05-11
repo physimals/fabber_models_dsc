@@ -19,7 +19,7 @@
  * The file also includes a conditional assembly definition
  * for the type of computer arithmetic (IEEE, DEC, Motorola
  * IEEE, or UNKnown).
- * 
+ *
  * For Digital Equipment PDP-11 and VAX computers, certain
  * IBM systems, and others that use numbers with a 56-bit
  * significand, the symbol DEC should be defined.  In this
@@ -189,7 +189,7 @@ typedef struct
 /* Get ANSI function prototypes, if you want them. */
 #if 1
 /* #ifdef __STDC__ */
-//#define ANSIPROT 1
+/*#define ANSIPROT 1*/
 int mtherr_default ( char *, int );
 int mtherr ( char *, int );
 int set_mtherr (int (*fn)(char *, int));

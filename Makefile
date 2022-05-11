@@ -1,25 +1,35 @@
 include ${FSLCONFDIR}/default.mk
 
 PROJNAME = fabber_dsc
+XFILES   = fabber_dsc
+SOFILES  = libfsl-fabber_models_dsc.so
+AFILES   = libfabber_models_dsc.a
 
-USRINCFLAGS = -I${INC_NEWMAT} -I${INC_PROB} -I${INC_CPROB} -I${INC_BOOST}
-USRLDFLAGS = -Ldscprob -L${LIB_NEWMAT} -L${LIB_PROB} -L../fabber_core
+# The FSL build system changed
+# substantially in FSL 6.0.6
+# FSL >= 6.0.6
+# In >=6.0.6 we dynamically link
+# against the fsl-cprob library
+ifeq (${FSL_GE_606}, true)
+  LIBS         = -lfsl-fabberexec -lfsl-fabbercore \
+                 -lfsl-newimage -lfsl-miscmaths -lfsl-utils \
+                 -lfsl-NewNifti -lfsl-cprob -lfsl-znz -ldl
+  USRCPPFLAGS += -DFSL_GE_606
 
-FSLVERSION= $(shell cat ${FSLDIR}/etc/fslversion | head -c 1)
-ifeq ($(FSLVERSION), 5) 
-  NIFTILIB = -lfslio -lniftiio 
-  MATLIB = -lnewmat
-else 
-  UNAME := $(shell uname -s)
-  ifeq ($(UNAME), Linux)
-    MATLIB = -lopenblas
+# FSL <= 6.0.5
+# In <=6.0.5 we statically link against
+# our own copy of the cprob library (dscprob)
+else
+  ifeq ($(shell uname -s), Linux)
+	MATLIB := -lopenblas
   endif
-  NIFTILIB = -lNewNifti
+  USRINCFLAGS = -I${INC_NEWMAT} -I${INC_BOOST} -I${INC_CPROB} \
+                -I${FSLDIR}/extras/include/armawrap
+  USRLDFLAGS  = -L${LIB_NEWMAT} -I${LIB_CPROB} -L../fabber_core \
+                -lfabbercore -lfabberexec -lnewimage \
+                -lmiscmaths -lutils ${MATLIB} -lNewNifti \
+                -lcprob -lznz -lm -lz -ldl
 endif
-
-LIBS = -lnewimage -lmiscmaths -lutils -ldscprob ${MATLIB} ${NIFTILIB} -lznz -lz -ldl
-
-XFILES = fabber_dsc
 
 # Forward models
 OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o spline_interpolator.o
@@ -28,27 +38,43 @@ OBJS =  fwdmodel_dsc.o fwdmodel_dsc_cpi.o spline_interpolator.o
 #OPTFLAGS = -ggdb
 
 # Pass Git revision details
-GIT_SHA1:=$(shell git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty)
-GIT_DATE:=$(shell git log -1 --format=%ad --date=local)
+GIT_SHA1 := $(shell git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty)
+GIT_DATE := $(shell git log -1 --format=%ad --date=local)
 CXXFLAGS += -DGIT_SHA1=\"${GIT_SHA1}\" -DGIT_DATE="\"${GIT_DATE}\""
 
 #
 # Build
 #
-dscprob/libdscprob.a:
-	cd dscprob && $(MAKE)
-
-all:	${XFILES} libfabber_models_dsc.a
 
 clean:
-	${RM} -f *.o *.a dscprob/*.o dscprob/*.a depend.mk fabber_dsc
+	${RM} -f *.o *.so *.a dscprob/*.o dscprob/*.a depend.mk fabber_dsc
+
+# FSL >=606 uses dynamic linking,
+# and the standard fsl-cprob library.
+ifeq (${FSL_GE_606}, true)
+
+all: ${XFILES} ${SOFILES}
 
 # models in a library
-libfabber_models_dsc.a : ${OBJS} 
-	${AR} -r $@ ${OBJS}
+libfsl-fabber_models_dsc.so : ${OBJS}
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^ ${LDFLAGS}
 
 # fabber built from the FSL fabbercore library including the models specifieid in this project
-fabber_dsc : fabber_client.o ${OBJS} dscprob/libdscprob.a
-	${CXX} ${CXXFLAGS} ${LDFLAGS} -o $@ $< ${OBJS} -lfabbercore -lfabberexec ${LIBS}
+fabber_dsc : fabber_client.o | libfsl-fabber_models_dsc.so
+	${CXX} ${CXXFLAGS} -o $@ $^ -lfsl-fabber_models_dsc ${LDFLAGS}
 
-# DO NOT DELETE
+# FSL <=605 uses static linking, and
+# a copy of the cprob library
+else
+
+all: ${XFILES} ${AFILES}
+
+dscprob/libdscprob.a:
+	$(MAKE) -C dscprob CC="${CC}" CFLAGS="${CFLAGS} -std=c99"
+
+libfabber_models_dsc.a : ${OBJS}
+	${AR} -r $@ $^
+
+fabber_dsc : fabber_client.o ${OBJS} dscprob/libdscprob.a
+	${CXX} ${CXXFLAGS} -o $@ $^ ${LDFLAGS}
+endif
